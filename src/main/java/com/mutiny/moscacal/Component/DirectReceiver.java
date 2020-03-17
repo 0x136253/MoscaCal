@@ -5,6 +5,8 @@ import com.rabbitmq.client.Channel;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import java.io.IOException;
 
@@ -14,9 +16,9 @@ import java.io.IOException;
  */
 @Component
 public class DirectReceiver {
+    @Autowired
+    private CountThread countThread;
 
-
-    
     @RabbitListener(queues = "MoscaDirectQueue")//监听的队列名称 TestDirectQueue
     @RabbitHandler
     public void process(Message message, Channel channel) throws IOException {
@@ -26,6 +28,7 @@ public class DirectReceiver {
         try {
             //消息确认
             channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
+
 //            channel.basicReject(message.getMessageProperties().getDeliveryTag(), true);
             System.out.println("消费消息：" + jsonObject);
         }catch (Exception e){
