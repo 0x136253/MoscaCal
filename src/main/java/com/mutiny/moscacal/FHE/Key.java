@@ -13,6 +13,9 @@ public class Key {
     public BigInteger g2;
     public BigInteger T;
 
+    public Key() {
+    }
+
     public Key(BigInteger p1, BigInteger n, BigInteger g1, BigInteger g2, BigInteger t) {
         P1 = p1;
         N = n;
