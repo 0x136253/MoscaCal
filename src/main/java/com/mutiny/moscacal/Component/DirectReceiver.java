@@ -45,6 +45,7 @@ public class DirectReceiver {
                 countThread.runModule(calModuleInfo);
             }
         }catch (Exception e){
+            System.out.println(e.getMessage());
             return false;
         }
         return  true;

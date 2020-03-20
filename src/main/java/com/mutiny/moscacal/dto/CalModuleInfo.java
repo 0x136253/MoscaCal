@@ -1,6 +1,7 @@
 package com.mutiny.moscacal.dto;
 
 import com.mutiny.moscacal.FHE.Key;
+import com.mutiny.moscacal.pojo.Module;
 
 import java.util.List;
 import java.util.Map;
@@ -16,17 +17,27 @@ public class CalModuleInfo {
     private Map<String, List<String>> map;
     private String username;
     private int size;
+    private Module module;
 
     public CalModuleInfo() {
     }
 
-    public CalModuleInfo(int moduleId, String func, Key key, Map<String, List<String>> map, String username, int size) {
+    public CalModuleInfo(int moduleId, String func, Key key, Map<String, List<String>> map, String username, int size, Module module) {
         this.moduleId = moduleId;
         this.func = func;
         this.key = key;
         this.map = map;
         this.username = username;
         this.size = size;
+        this.module = module;
+    }
+
+    public Module getModule() {
+        return module;
+    }
+
+    public void setModule(Module module) {
+        this.module = module;
     }
 
     public int getModuleId() {

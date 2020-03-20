@@ -48,7 +48,7 @@ public class SwitchInfo {
         Key keyFile = getKey(CSVUtils.readCsvFile(pathHandle(fileUrl,ip),-1));
         DefaultData defaultData = defaultDataMapper.selectByPrimaryKey(moduleId);
         DefaultModule defaultModule = defaultModuleMapper.selectByPrimaryKey(defaultData.getDefaultmoduleId());
-        CalDefaultDataInfo calDefaultDataInfo = new CalDefaultDataInfo(moduleId,defaultModule.getTfunction(),keyFile,fileMap,username,getSize(fileMap));
+        CalDefaultDataInfo calDefaultDataInfo = new CalDefaultDataInfo(moduleId,defaultModule.getTfunction(),keyFile,fileMap,username,getSize(fileMap),defaultData,defaultModule);
         return calDefaultDataInfo;
     }
 
@@ -56,7 +56,7 @@ public class SwitchInfo {
         Map<String, List<String>> fileMap = CSVUtils.readCsvFile(pathHandle(fileUrl,ip),-1);
         Key keyFile = getKey(CSVUtils.readCsvFile(pathHandle(keyFileUrl,ip),-1));
         Module module = moduleMapper.selectByPrimaryKey(moduleId);
-        CalModuleInfo calModuleInfo = new CalModuleInfo(moduleId,module.getTfunction(),keyFile,fileMap,username,getSize(fileMap));
+        CalModuleInfo calModuleInfo = new CalModuleInfo(moduleId,module.getTfunction(),keyFile,fileMap,username,getSize(fileMap),module);
         return calModuleInfo;
     }
 
