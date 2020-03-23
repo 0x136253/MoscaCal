@@ -45,9 +45,9 @@ public class SwitchInfo {
 
     public CalDefaultDataInfo switchDefaultData(int moduleId,int fileId,String fileUrl,int keyFileId,String keyFileUrl,long time,String ip,String username){
         Map<String, List<String>> fileMap = CSVUtils.readCsvFile(pathHandle(fileUrl,ip),-1);
-        Key keyFile = getKey(CSVUtils.readCsvFile(pathHandle(fileUrl,ip),-1));
+        Key keyFile = getKey(CSVUtils.readCsvFile(pathHandle(keyFileUrl,ip),-1));
         DefaultData defaultData = defaultDataMapper.selectByPrimaryKey(moduleId);
-        DefaultModule defaultModule = defaultModuleMapper.selectByPrimaryKey(defaultData.getDefaultmoduleId());
+        DefaultModule defaultModule = defaultModuleMapper.selectByPrimaryKey(defaultData.getDefaultId());
         CalDefaultDataInfo calDefaultDataInfo = new CalDefaultDataInfo(moduleId,defaultModule.getTfunction(),keyFile,fileMap,username,getSize(fileMap),defaultData,defaultModule);
         return calDefaultDataInfo;
     }

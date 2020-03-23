@@ -3,13 +3,12 @@ package com.mutiny.moscacal.message;
 import com.mutiny.moscacal.dao.MessageInfoMapper;
 import com.mutiny.moscacal.dao.MessageSendMapper;
 import com.mutiny.moscacal.dao.MessageUserMapper;
-import com.mutiny.moscacal.pojo.MessageInfo;
-import com.mutiny.moscacal.pojo.MessageUser;
-import com.mutiny.moscacal.pojo.MessageUserExample;
+import com.mutiny.moscacal.pojo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -25,6 +24,12 @@ public class MessageUpdate {
     @Autowired
     private MessageInfoMapper messageInfoMapper;
 
+    /**
+     * 用户登陆后拉取消息
+     * @param username
+     * @return
+     * @throws Exception
+     */
     public boolean update(String username) throws Exception{
         MessageUserExample messageUserExample = new MessageUserExample();
         messageUserExample.createCriteria().andUserIdEqualTo(username);
@@ -32,21 +37,48 @@ public class MessageUpdate {
         if (messageUserList.size()==0){
             return true;
         }
-        List<MessageInfo> messageInfoList = new ArrayList<>();
+        MessageSendExample messageSendExample = new MessageSendExample();
         for (MessageUser record:messageUserList){
+            messageSendExample.clear();
             if (!record.getStatus()){
                 MessageInfo temp = messageInfoMapper.selectByPrimaryKey(record.getMessageInfoId());
-                messageInfoList.add(temp);
+                if (temp.getPushTime().after(new Date())){
+                    continue;
+                }
+                messageSendExample.createCriteria().andUserIdEqualTo(username).andMessageInfoIdEqualTo(temp.getMessageInfoId());
+                if (messageSendMapper.selectByExample(messageSendExample).size()!=0){
+                    continue;
+                }
+                MessageSend messageSend = new MessageSend();
+                messageSend.setMessageInfoId(temp.getMessageInfoId());
+                messageSend.setUserId(username);
+                messageSend.setMessageTitle(temp.getTitle());
+                messageSend.setMessageText(temp.getText());
+                messageSend.setMessageUrl(temp.getMessageUrl());
+                messageSend.setType(temp.getType());
+                messageSend.setOperator(temp.getOperator());
+                messageSendMapper.insertSelective(messageSend);
             }
         }
+        return true;
+    }
 
-
-
-
-
-
-
-
+    /**
+     * 消息发送方删除即将发送的消息????Chenck permission
+     * @param username
+     * @param messageInfoId
+     * @return
+     * @throws Exception
+     */
+    public boolean deleteMessage(String username,int messageInfoId) throws Exception{
+        MessageUserExample messageUserExample = new MessageUserExample();
+        messageUserExample.createCriteria().andUserIdEqualTo(username).andMessageInfoIdEqualTo(messageInfoId);
+        MessageUser messageUser = messageUserMapper.selectByExample(messageUserExample).get(0);
+        messageUser.setStatus(true);
+        messageUserMapper.updateByPrimaryKeySelective(messageUser);
+        MessageInfo messageInfo = messageInfoMapper.selectByPrimaryKey(messageInfoId);
+        messageInfo.setsNum(messageInfo.getsNum()-1);
+        messageInfoMapper.updateByPrimaryKeySelective(messageInfo);
         return true;
     }
 

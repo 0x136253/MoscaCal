@@ -6,6 +6,7 @@ import com.mutiny.moscacal.dto.CalDefaultDataInfo;
 import com.mutiny.moscacal.dto.CalModuleInfo;
 import com.mutiny.moscacal.mail.EmailService;
 import com.mutiny.moscacal.mail.MailBean;
+import com.mutiny.moscacal.message.MessageSender;
 import com.mutiny.moscacal.pojo.FileAnswer;
 import com.mutiny.moscacal.pojo.User;
 import com.mutiny.moscacal.util.CSVUtils;
@@ -28,6 +29,8 @@ public class CountThread {
     private RunCal runCal;
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private MessageSender messageSender;
     @Autowired
     private EmailService emailService;
     public Boolean canBeRun() {
@@ -52,6 +55,7 @@ public class CountThread {
         }
         runCal.runModule(calModuleInfo);
         emailStartSend(calModuleInfo.getUsername(),calModuleInfo.getModuleId());
+        messageSender.sendPrivate("Calculate","The Calculate your apply hava already start.",calModuleInfo.getUsername());
     }
 
     public void runDefaultData(CalDefaultDataInfo calDefaultDataInfo) throws Exception{
@@ -60,5 +64,6 @@ public class CountThread {
         }
         runCal.runDefaultData(calDefaultDataInfo);
         emailStartSend(calDefaultDataInfo.getUsername(),calDefaultDataInfo.getModuleId());
+        messageSender.sendPrivate("Calculate","The Calculate your apply hava already start.",calDefaultDataInfo.getUsername());
     }
 }

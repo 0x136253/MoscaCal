@@ -7,6 +7,7 @@ import com.mutiny.moscacal.pojo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -14,11 +15,13 @@ import java.util.List;
  * @Date: 2020/3/20 17:49
  */
 @Component
-public class MessageSend {
+public class MessageSender {
     @Autowired
     private MessageInfoMapper messageInfoMapper;
     @Autowired
     private MessageUserMapper messageUserMapper;
+    @Autowired
+    private UserMapper userMapper;
     /**
      * 发送消息,userList 可用userMapper生成
      * @param message
@@ -44,5 +47,35 @@ public class MessageSend {
         return true;
     }
 
+    public boolean sendPrivate(Message message,String username) throws Exception{
+        User user = new User();
+        user.setId(username);
+        List<User> userList = new ArrayList<>();
+        userList.add(user);
+        return sendAll(message,userList);
+    }
 
+    public boolean sendPrivate(String title,String text,String username) throws Exception{
+        Message message = new Message(title,text,"private");
+        User user = new User();
+        user.setId(username);
+        List<User> userList = new ArrayList<>();
+        userList.add(user);
+        return sendAll(message,userList);
+    }
+
+    public boolean sendPublic(Message message,String username) throws Exception{
+        UserExample userExample = new UserExample();
+        userExample.createCriteria();
+        List<User> userList = userMapper.selectByExample(userExample);
+        return sendAll(message,userList);
+    }
+
+    public boolean sendPublic(String title,String text,String username) throws Exception{
+        Message message = new Message(title,text,"public");
+        UserExample userExample = new UserExample();
+        userExample.createCriteria();
+        List<User> userList = userMapper.selectByExample(userExample);
+        return sendAll(message,userList);
+    }
 }

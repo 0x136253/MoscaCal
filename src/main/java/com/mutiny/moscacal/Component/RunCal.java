@@ -11,6 +11,7 @@ import com.mutiny.moscacal.dto.CalDefaultDataInfo;
 import com.mutiny.moscacal.dto.CalModuleInfo;
 import com.mutiny.moscacal.mail.EmailService;
 import com.mutiny.moscacal.mail.MailBean;
+import com.mutiny.moscacal.message.MessageSender;
 import com.mutiny.moscacal.pojo.*;
 import com.mutiny.moscacal.util.CSVUtils;
 import com.mutiny.moscacal.util.RecursiveDescentUtils;
@@ -43,6 +44,8 @@ public class RunCal{
     @Autowired
     private UserMapper userMapper;
     @Autowired
+    private MessageSender messageSender;
+    @Autowired
     private EmailService emailService;
     public static int getCount() {
         return count;
@@ -69,6 +72,12 @@ public class RunCal{
         defaultData.setIsCalculate(true);
         defaultDataMapper.updateByPrimaryKeySelective(defaultData);
         emailStartSend(calDefaultDataInfo.getUsername(),id);
+        try {
+            Thread.sleep(5000);
+            messageSender.sendPrivate("Calculate","The Calculate your apply hava complete.",calDefaultDataInfo.getUsername());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         count--;
         return;
     }
@@ -91,6 +100,12 @@ public class RunCal{
         module.setIsCalculate(true);
         moduleMapper.updateByPrimaryKeySelective(module);
         emailStartSend(calModuleInfo.getUsername(),id);
+        try {
+            Thread.sleep(5000);
+            messageSender.sendPrivate("Calculate","The Calculate your apply hava complete.",calModuleInfo.getUsername());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         count--;
         return;
     }
@@ -148,6 +163,7 @@ public class RunCal{
         List<BigInteger> answer = new ArrayList<>();
         for (int i =0;i<calMap.length;i++){
             RecursiveDescentUtils recursiveDescentUtils = new RecursiveDescentUtils(func,decode(calMap[i],key));
+            System.out.println(recursiveDescentUtils.exp());
             RecursiveDescent recursiveDescent = new RecursiveDescent(func,calMap[i],key);
             answer.add(EncryptDecrypt.decryption(recursiveDescent.exp(),key));
         }
