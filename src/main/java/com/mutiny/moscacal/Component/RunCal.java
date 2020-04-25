@@ -70,6 +70,15 @@ public class RunCal{
 
         defaultData.setFileaswid(FileID);
         defaultData.setIsCalculate(true);
+        ModuleExample moduleExample = new ModuleExample();
+        moduleExample.createCriteria().andIsDefaultEqualTo(true).andDefaultmoduleIdEqualTo(defaultData.getDefaultmoduleId());
+        List<Module> updateModuleList = moduleMapper.selectByExample(moduleExample);
+        for(Module record:updateModuleList){
+            Module module = new Module();
+            module.setModuleId(record.getModuleId());
+            module.setIsCalculate(true);
+            moduleMapper.updateByPrimaryKeySelective(module);
+        }
         defaultDataMapper.updateByPrimaryKeySelective(defaultData);
         emailStartSend(calDefaultDataInfo.getUsername(),id);
         try {
