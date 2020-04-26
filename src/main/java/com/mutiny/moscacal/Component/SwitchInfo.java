@@ -79,10 +79,14 @@ public class SwitchInfo {
         System.out.println(path);
         String system = System.getProperty("os.name");
         path=path.replaceAll("//","/");
-        if (system.startsWith("Windows")){
+        if (system.startsWith("Windows") && !ip.equals("47.103.0.173")){
             path = "http://"+ip+":8080/image/"+path;
         }
-        else if (system.startsWith("Linux")){
+        else if (system.startsWith("Linux") && !ip.equals("47.103.0.173")){
+           // path = "http://"+ip+":8080/demo-0.1.0/image/"+path;
+            path = "http://"+ip+":8080/image/"+path;
+        }
+        if (ip.equals("47.103.0.173")) {
             path = "http://"+ip+":8080/demo-0.1.0/image/"+path;
         }
         return download(path);

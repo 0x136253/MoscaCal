@@ -174,7 +174,8 @@ public class RunCal{
             RecursiveDescentUtils recursiveDescentUtils = new RecursiveDescentUtils(func,decode(calMap[i],key));
             System.out.println(recursiveDescentUtils.exp());
             RecursiveDescent recursiveDescent = new RecursiveDescent(func,calMap[i],key);
-            answer.add(EncryptDecrypt.decryption(recursiveDescent.exp(),key));
+        //    answer.add(EncryptDecrypt.decryption(recursiveDescent.exp(),key));
+            answer.add(recursiveDescent.exp());
         }
         System.out.println("Run Success");
         return answer;
