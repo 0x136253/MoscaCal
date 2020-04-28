@@ -171,6 +171,7 @@ public class RunCal{
         }
         List<BigInteger> answer = new ArrayList<>();
         for (int i =0;i<calMap.length;i++){
+            System.out.println(decode(calMap[i],key));
             RecursiveDescentUtils recursiveDescentUtils = new RecursiveDescentUtils(func,decode(calMap[i],key));
             System.out.println(recursiveDescentUtils.exp());
             RecursiveDescent recursiveDescent = new RecursiveDescent(func,calMap[i],key);
