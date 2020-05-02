@@ -70,6 +70,7 @@ public class RunCal{
 
         defaultData.setFileaswid(FileID);
         defaultData.setIsCalculate(true);
+        defaultData.setCompletetime(new Date());
         ModuleExample moduleExample = new ModuleExample();
         moduleExample.createCriteria().andIsDefaultEqualTo(true).andDefaultmoduleIdEqualTo(defaultData.getDefaultmoduleId());
         List<Module> updateModuleList = moduleMapper.selectByExample(moduleExample);
@@ -107,6 +108,7 @@ public class RunCal{
         Module module = calModuleInfo.getModule();
         int FileID = saveAnsw(Sysnis(InfoMap,answer),filePath.returnBasicPath()+"Answ//","None",module.getKeyfileid(),id,module.getMultnum());
         module.setIsCalculate(true);
+        module.setCompletetime(new Date());
         moduleMapper.updateByPrimaryKeySelective(module);
         emailStartSend(calModuleInfo.getUsername(),id);
         try {
